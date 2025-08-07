@@ -52,20 +52,20 @@ def get_weather_data(cityURL):
 def description(data,CITY):
     Data_Return={}
     Data_Return['City'] = CITY
-    coordinates=data.get('coord', {})
-    Data_Return['Lat'] = coordinates.get('lat')
-    Data_Return['Lon'] = coordinates.get('lon')
+    coordinates=data.get('coord', None)
+    Data_Return['Lat'] = coordinates.get('lat',None)
+    Data_Return['Lon'] = coordinates.get('lon',None)
 
-    weather=data.get('weather', [{}])[0]
-    Data_Return['Description'] = weather.get('description', 'No description available')
+    weather=data.get('weather', [None])[0]
+    Data_Return['Description'] = weather.get('description',None)
 
     
-    Temp = data.get('main', {})
-    Data_Return['Actual_Temp'] = Temp.get('temp', 'No temperature data available')
-    Data_Return['Feels_Like'] = Temp.get('feels_like', 'No feels like data available')
-    Data_Return['Min_Temp'] = Temp.get('temp_min', 'No minimum temperature data available')
-    Data_Return['Max_Temp'] = Temp.get('temp_max', 'No maximum temperature data available')
-    Data_Return['Humidity'] = Temp.get('humidity', 'No humidity data available')
+    Temp = data.get('main', None)
+    Data_Return['Actual_Temp'] = Temp.get('temp',None)
+    Data_Return['Feels_Like'] = Temp.get('feels_like',None)
+    Data_Return['Min_Temp'] = Temp.get('temp_min',None )
+    Data_Return['Max_Temp'] = Temp.get('temp_max',None)
+    Data_Return['Humidity'] = Temp.get('humidity',None)
 
 
     pressure_hpa = Temp.get('pressure')  # Returns None if not found
@@ -73,40 +73,42 @@ def description(data,CITY):
     if pressure_hpa is not None:
         Data_Return['Pressure'] = pressure_hpa * 100  # Convert to Pa
     else:
-        Data_Return['Pressure'] = 'No pressure data available'
+        #Data_Return['Pressure'] = 'No pressure data available'
+        pass
 
 
-    Data_Return['Visibility'] = data.get('visibility', 'No visibility data available')
+    Data_Return['Visibility'] = data.get('visibility',None)
 
-    wind_conditions = data.get('wind', {})
-    Data_Return['Wind_Speed'] = wind_conditions.get('speed', 'No wind speed data available')
-    Data_Return['Wind_Direction'] = wind_conditions.get('deg', 'No wind direction data available')  
-    #Data_Return['Cloudiness'] = data.get('clouds', {}).get('all', 'No cloudiness data available')
-    Data_Return['gust']=wind_conditions.get('gust', 'No gust data available')
+    wind_conditions = data.get('wind', None)
+    Data_Return['Wind_Speed'] = wind_conditions.get('speed',None)
+    Data_Return['Wind_Direction'] = wind_conditions.get('deg',None)  
+    #Data_Return['Cloudiness'] = data.get('clouds', None).get('all', 'No cloudiness data available')
+    Data_Return['gust']=wind_conditions.get('gust',None)
 
 
 
-    clouds = data.get('clouds', {}).get('all', None)  # Use .get() to avoid KeyError if 'clouds' is not present
+    clouds = data.get('clouds', None).get('all', None)  # Use .get() to avoid KeyError if 'clouds' is not present
     #Data_Return['Cloudiness'] = clouds.get('all', 'No cloudiness data available')
     if clouds is not None:
         Data_Return['Cloudiness'] = float(clouds)/100 #0.xx% 
     else:
-        Data_Return['Cloudiness'] = 'No Cloud data available'
+        pass #Data_Return['Cloudiness'] = 'No Cloud data available'
     
 
-    sys= data.get('sys', {})
-    Data_Return['Country'] = sys.get('country', 'No country data available')
+    sys= data.get('sys', None)
+    Data_Return['Country'] = sys.get('country',None)
     Sunrise = sys.get('sunrise')
     if Sunrise is not None:
         Data_Return['Sunrise'] = datetime.datetime.fromtimestamp(Sunrise).strftime('%Y-%m-%d %H:%M:%S')
     else:
-        Data_Return['Sunrise'] = 'No sunrise data available'
+        #Data_Return['Sunrise'] = 'No sunrise data available'
+        pass
 
     Sunset = sys.get('sunset')
     if Sunset is not None:
         Data_Return['Sunset'] = datetime.datetime.fromtimestamp(Sunset).strftime('%Y-%m-%d %H:%M:%S')
     else:
-        Data_Return['Sunset'] = 'No sunset data available'
+        pass #Data_Return['Sunset'] = 'No sunset data available'
 
     timezone = data.get('timezone', 0)
     if timezone is not None:
@@ -115,7 +117,7 @@ def description(data,CITY):
         sign = '+' if timezone >= 0 else '-'
         Data_Return['Timezone'] = f'UTC{sign}{abs(offset_hours):02}:{offset_minutes:02}'
     else:
-        Data_Return['Timezone'] = 'No timezone data available'
+        pass   #Data_Return['Timezone'] = 'No timezone data available'
     #jason_data = json.dumps(Data_Return, indent=4)
     #return jason_data
     print(Data_Return) 

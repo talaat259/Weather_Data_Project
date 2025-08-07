@@ -1,7 +1,59 @@
 from kafka import KafkaConsumer
 import json
-import duckdb
-import pyspark
+import snowflake.connector
+from SNOWFLAKE_CONFIG import SNOWFLAKE_CONFIG
+
+
+
+
+
+
+
+def insert_to_snowflake(data):
+    conn = snowflake.connector.connect(**SNOWFLAKE_CONFIG)
+    cursor = conn.cursor()
+    
+    try:
+        sql = """
+        INSERT INTO weather_data (
+            City, Latitude, Longitude, Weather_Description,
+            Actual_Temp, Feels_Like_Temp, Min_Temp, Max_Temp,
+            Humidity, Pressure, Visibi, Wind_Speed,
+            Wind_Direction, Gust, Cloud_Percentage, Country,
+            Sunrise_Time, Sunset_Time, Time_Zone
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(sql, (
+            data['City'],
+            data['Lat'],                 # → Latitude
+            data['Lon'],                 # → Longitude
+            data['Description'],         # → Weather_Description
+            data['Actual_Temp'],
+            data['Feels_Like'],          # → Feels_Like_Temp
+            data['Min_Temp'],
+            data['Max_Temp'],
+            data['Humidity'],
+            data['Pressure'],
+            data['Visibility'],          # → Visibi
+            data['Wind_Speed'],
+            data['Wind_Direction'],
+            data['gust'],                # → Gust
+            data['Cloudiness'],          # → Cloud_Percentage
+            data['Country'],
+            data['Sunrise'],             # → Sunrise_Time
+            data['Sunset'],              # → Sunset_Time
+            data['Timezone']             # → Time_Zone
+        ))
+
+        conn.commit()
+        print("✅ Inserted into Snowflake.")
+        
+    except Exception as e:
+        print(f"❌ Snowflake Insert Error: {e}")
+    finally:
+        cursor.close()
+        conn.close()
 
 
 cconsumer = KafkaConsumer(
@@ -16,9 +68,6 @@ cconsumer = KafkaConsumer(
 
 for message in cconsumer:
     data = message.value
+
     print(f"Received data: {data}")
-        
-        # Here you can process the data as needed, e.g., store it in a database
-        # For example, using DuckDB or PySpark to store the data
-        # duckdb.execute("INSERT INTO weather_data_table VALUES (?)", (data,))
-        # Or use PySpark DataFrame to process and store the data
+    insert_to_snowflake(data)
