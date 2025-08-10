@@ -53,3 +53,7 @@ This project implements a **real-time data engineering pipeline** that collects 
 ---
 
 ## 📂 Project Structure
+
+<img width="1660" height="400" alt="(untitled)" src="https://github.com/user-attachments/assets/88a2a8b8-34e5-404a-bc22-eac72462c521" />
+
+
