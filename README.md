@@ -9,7 +9,7 @@ This project implements a **real-time data engineering pipeline** that collects 
 
 ### 1. **Weather Data API Fetcher**
 - **Description:** Python script that performs API calls to gather weather data for requested cities.
-- **Output:** Saves the retrieved data into a **CSV file**.
+- **Output:** Saves the retrieved data into a **SnowFlake database**.
 - **Purpose:** Serves as a **Kafka producer** to publish weather data for further processing.
 
 ### 2. **Kafka Producer & ETL**
