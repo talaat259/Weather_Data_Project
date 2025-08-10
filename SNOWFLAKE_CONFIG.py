@@ -1,7 +1,7 @@
 SNOWFLAKE_CONFIG = {
-    "account": "VEBAATB-WX72729",
+    "account": "XXXXXXXXXXXXXXX",#replace with your account
     "user": "TALAAT",
-    "password": "*g28Lx7h8]JrWqY",
+    "password": "*XXXXXXXXXXXXXXY",#replace with your password
     "role": "ACCOUNTADMIN",  # optional
     "warehouse": "COMPUTE_WH",  # Replace with your actual warehouse name
     "database": "WEATHER",
